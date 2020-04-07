@@ -57,7 +57,6 @@ export class ResetPasswordComponent {
       const email = await this.authService.verifyPasswordResetCode(this.actionCode);
       await this.authService.resetPassword(newPassword, this.actionCode, email);
       this.toastService.success(`${this.infoMessages.passwordChanged}`)
-      this.infoMessages
       this.router.navigate(['/signin']);
     } catch(e) {
       this.toastService.error(e.message)

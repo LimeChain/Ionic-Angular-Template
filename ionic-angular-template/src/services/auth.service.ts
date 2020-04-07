@@ -31,11 +31,19 @@ export class AuthService {
   }
 
   async createUser(wallet: string, uid: string, email: string) {
-    return this.api.post(`${environment.apiUrl}/users/createUser`, {wallet, uid, email});
+    try {
+      return this.api.post(`${environment.apiUrl}/users/createUser`, {wallet, uid, email});
+    } catch(e) {
+      throw new Error(e);
+    }
   }
 
   async getUserData() {
-    return await this.api.get(`${environment.apiUrl}/users/wallet`);
+    try {
+      return await this.api.get(`${environment.apiUrl}/users/wallet`);
+    } catch(e) {
+      throw new Error(e);
+    }
   }
 
   async signUp(email: string, password: string) {
@@ -56,7 +64,6 @@ export class AuthService {
         const currentUser = await firebase.auth().signInWithEmailAndPassword(email, password);
         return currentUser.user.emailVerified;
     } catch (e) {
-      // this.notificationService.error('Invalid email or password !');
       throw new Error(e);
     }
   }
@@ -65,7 +72,7 @@ export class AuthService {
     try {
       return await firebase.auth().verifyPasswordResetCode(code);
     } catch (e) {
-      // this.notificationService.error(e.error.message);
+      throw new Error(e);
     }
   }
 
@@ -78,22 +85,34 @@ export class AuthService {
       await this.resetWallet(currentUser.user.uid, encryptJson);
       await this.logout();
     } catch (e) {
-      // this.notificationService.error(e.message);
+      throw new Error(e);
     }
   }
 
   async resetWallet(uid: string, wallet: string) {
-    await this.api.put(`${environment.apiUrl}/users/wallet`, {uid, wallet});
+    try {
+      await this.api.put(`${environment.apiUrl}/users/wallet`, {uid, wallet});
+    } catch(e) {
+      throw new Error(e);
+    }
   }
 
   async logout() {
-    this.storageService.removeItem('user');
-    this.loggedUserDataSubject.next(null);
-    await firebase.auth().signOut();
+    try {
+      this.storageService.removeItem('user');
+      this.loggedUserDataSubject.next(null);
+      await firebase.auth().signOut();
+    } catch(e) {
+      throw new Error(e);
+    }
   }
 
   async sentResetPasswordEmail(email: string) {
-    await firebase.auth().sendPasswordResetEmail(email);
+    try {
+      await firebase.auth().sendPasswordResetEmail(email);
+    } catch(e) {
+      throw new Error(e);
+    }
   }
 
   async verifyEmail(actCode: string) {

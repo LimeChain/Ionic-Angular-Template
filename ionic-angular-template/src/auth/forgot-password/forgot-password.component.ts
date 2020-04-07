@@ -38,7 +38,7 @@ export class ForgotPasswordComponent {
     try {
       await this.authService.sentResetPasswordEmail(this.email.value);
       this.toastService.success(`${this.infoMessages.emailSent}`);
-      this.route.navigate(['']);
+      this.route.navigate(['signin']);
     } catch(e) {
       this.toastService.error(e.message);
     }
