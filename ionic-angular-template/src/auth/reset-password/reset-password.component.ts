@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { EqualValueValidator } from '../../validators/validator';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastService } from '../../services/toast.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-reset-password',
@@ -23,7 +24,8 @@ export class ResetPasswordComponent {
     private readonly formBuilder: FormBuilder,
     private equalValueValidator: EqualValueValidator,
     private tranlateService: TranslateService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private spinner: NgxSpinnerService
   ) {
     this.resetPasswordForm = this.formBuilder.group({
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
@@ -53,14 +55,16 @@ export class ResetPasswordComponent {
 
   async resetPassword() {
     try {
+      this.spinner.show();
       const newPassword = this.newPassword.value;
       const email = await this.authService.verifyPasswordResetCode(this.actionCode);
       await this.authService.resetPassword(newPassword, this.actionCode, email);
       this.toastService.success(`${this.infoMessages.passwordChanged}`)
-      this.infoMessages
+      this.spinner.hide();
       this.router.navigate(['/signin']);
     } catch(e) {
-      this.toastService.error(e.message)
+      this.spinner.hide();
+      this.toastService.error(e)
       }
     }
 }
