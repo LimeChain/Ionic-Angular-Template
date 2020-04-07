@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
-
+import { Plugins } from '@capacitor/core';
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
-  public getItem(key: string): string {
-    return localStorage.getItem(key);
+  public async getItem(key: string): Promise<string> {
+    return (await Plugins.Storage.get({key})).value;
   }
 
   public setItem(key: string, value: string): void {
-      localStorage.setItem(key, value);
+    Plugins.Storage.set({key: 'user', value});
   }
 
   public removeItem(key: string): void {
-      localStorage.removeItem(key);
+    Plugins.Storage.remove({key});
   }
 
   public clear(): void {
