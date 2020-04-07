@@ -22,6 +22,8 @@ import { SignUpComponent } from '../auth/sign-up/sign-up.component';
 import { ResetPasswordComponent } from '../auth/reset-password/reset-password.component';
 import { VerifyEmailComponent } from '../auth/verify-email/verify-email.component';
 import { EqualValueValidator } from '../validators/validator';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 firebase.initializeApp(environment.firebase);
 
@@ -33,6 +35,8 @@ export function HttpLoaderFactory(http: HttpClient) {
   declarations: [AppComponent, SignInComponent, ForgotPasswordComponent, SignUpComponent, ResetPasswordComponent, VerifyEmailComponent],
   entryComponents: [],
   imports: [
+    BrowserAnimationsModule,
+    NgxSpinnerModule,
     ReactiveFormsModule,
     CommonModule,
     HttpClientModule,
