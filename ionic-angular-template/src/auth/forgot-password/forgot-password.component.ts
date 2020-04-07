@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
 import { TranslateService } from '@ngx-translate/core';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-forgot-password',
@@ -19,6 +20,7 @@ export class ForgotPasswordComponent {
     private toastService: ToastService,
     private authService: AuthService,
     private translateService: TranslateService,
+    private spinner: NgxSpinnerService
   ) {
     this.forgotPasswordForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -36,10 +38,13 @@ export class ForgotPasswordComponent {
 
    async sendEmail() {
     try {
+      this.spinner.show();
       await this.authService.sentResetPasswordEmail(this.email.value);
       this.toastService.success(`${this.infoMessages.emailSent}`);
-      this.route.navigate(['signin']);
+      this.spinner.hide();
+      this.route.navigate(['']);
     } catch(e) {
+      this.spinner.hide();
       this.toastService.error(e.message);
     }
    }

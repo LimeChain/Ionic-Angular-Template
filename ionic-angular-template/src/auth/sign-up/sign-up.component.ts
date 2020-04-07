@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastService } from '../../services/toast.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-sign-up',
@@ -20,7 +21,8 @@ export class SignUpComponent implements OnInit {
     private alertCtrl: AlertController,
     private formBuilder: FormBuilder,
     private translateService: TranslateService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private spinner: NgxSpinnerService
   ) {
     this.translateService.stream([
       'info-messages',
@@ -48,10 +50,13 @@ export class SignUpComponent implements OnInit {
     const email = this.email.value;
     const password = this.password.value;
     try {
+        this.spinner.show();
         await this.authService.signUp(email, password);
+        this.spinner.hide();
         await this.showInfoAlert();
         this.router.navigate(['']);
     } catch(e) {
+      this.spinner.hide();
       this.showErrorAlert(e.message);
     }
   }

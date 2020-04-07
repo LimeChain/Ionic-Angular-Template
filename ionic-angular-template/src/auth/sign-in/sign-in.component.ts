@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastService } from '../../services/toast.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-sign-in',
@@ -20,7 +21,8 @@ export class SignInComponent implements OnInit {
     private alertCtrl: AlertController,
     private formBuilder: FormBuilder,
     private translateService: TranslateService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private spinner: NgxSpinnerService
   ) { 
     this.translateService.stream([
       'info-messages',
@@ -45,17 +47,21 @@ export class SignInComponent implements OnInit {
   }
 
   async signIn() {
+    this.spinner.show();
     const email = this.email.value;
     const password = this.password.value;
     try {
       const checkEmailVerified = await this.authService.checkUserEmailVerified(email, password);
       if (!checkEmailVerified) {
+        this.spinner.hide();
         this.showInfoAlert();
         }
         await this.authService.getUserData();
+        this.spinner.hide();
         this.router.navigate(['']);
         } catch(e) {
-              this.showErrorAlert(e.message);
+        this.spinner.hide();
+        this.showErrorAlert(e.message);
         }
     }
 

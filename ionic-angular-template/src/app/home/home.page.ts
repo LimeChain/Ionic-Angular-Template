@@ -10,9 +10,10 @@ import { ToastService } from '../../services/toast.service';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnDestroy {
   private infoMessages: any;
   public loggedUser: any;
+  private loggedSubscription: Subscription;
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -24,10 +25,13 @@ export class HomePage implements OnInit {
       });
     }
 
-  ngOnInit(): void {
-    this.authService.loggedUserData.subscribe((data) => this.loggedUser = data);
+  ngOnInit() {
+    this.loggedSubscription = this.authService.loggedUserData.subscribe((data) => this.loggedUser = data);
   }
   
+  ngOnDestroy() {
+    this.loggedSubscription.unsubscribe();
+  }
 
   logout() {
     try {
