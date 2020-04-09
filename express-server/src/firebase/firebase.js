@@ -16,12 +16,14 @@ class FirebaseOperations {
 
     static async create(collection, doc, dto) {
         firebase.firestore().collection(`${collection}`).doc(`${doc}`).set(dto);
-        const user = (await firebase.firestore().collection('users').doc(`${doc}`).get()).data();
+        const user = (await firebase.firestore().collection(`${collection}`).doc(`${doc}`).get()).data();
         return user;
     }
 
-    static update(collection, doc, dto) {
+    static async update(collection, doc, dto) {
         firebase.firestore().collection(`${collection}`).doc(`${doc}`).update(dto);
+        const user = (await firebase.firestore().collection(`${collection}`).doc(`${doc}`).get()).data();
+        return user;
     }
 
     static async verifyToken(token) {
